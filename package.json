@@ -3,9 +3,9 @@
   "productName": "web-contents-demo",
   "description": "Starter for your Electron application",
   "version": "0.0.0",
-  "author": "Mr. Gumby <mr.gumby@example.com>",
-  "copyright": "© 2017, Gumby inc.",
-  "homepage": "http://example.com",
+  "author": "zhangaz1 <zhangaz1@hotmail.com>",
+  "copyright": "© 2017, zhangaz1 inc.",
+  "homepage": "https://github.com/zhangaz1/web-contents-demo",
   "license": "MIT",
   "main": "app/background.js",
   "build": {
