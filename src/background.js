@@ -21,6 +21,12 @@ import createWindow from './helpers/window';
 // in config/env_xxx.json file.
 import env from './env';
 
+
+import {
+	start as startMessageServer
+} from './framework/messageServer/index';
+
+
 const setApplicationMenu = () => {
 	const menus = [editMenuTemplate];
 	if(env.name !== 'production') {
@@ -39,6 +45,8 @@ if(env.name !== 'production') {
 }
 
 app.on('ready', () => {
+	startMessageServer();
+
 	setApplicationMenu();
 
 	const mainWindow = createWindow('main', {
