@@ -3,11 +3,16 @@ const path = require('path');
 const remote = require('electron').remote;
 const BrowserWindow = remote.BrowserWindow;
 
+import {
+	createMaster
+} from './../framework/message/client/index.js';
+
 const preloadJs = path.join(__dirname, '/preload.js');
 const loginUrl = 'https://passport.baidu.com/v2/?login';
 
 let baiduWindow = null;
 let webContents = null;
+let messageMaster = null;
 
 export const init = () => {
 	$('#open').click(openHandler);
@@ -16,6 +21,7 @@ export const init = () => {
 // return void(0);
 
 function openHandler() {
+	messageMaster = createMaster('baidu');
 	baiduWindow = createWindow();
 	webContents = baiduWindow.webContents;
 
@@ -23,7 +29,6 @@ function openHandler() {
 		// baiduWindow.send('message', {
 		// 	data: 'xyz'
 		// });
-
 
 	})
 

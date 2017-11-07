@@ -24,7 +24,7 @@ import env from './env';
 
 import {
 	start as startMessageServer
-} from './framework/message/server/index';
+} from './framework/message/server/index.js';
 
 
 const setApplicationMenu = () => {
