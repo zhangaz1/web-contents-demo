@@ -38,26 +38,19 @@ function createWindow() {
 };
 
 function login() {
-	webContents.executeJavaScript(replaceModule());
-	webContents.executeJavaScript(loadJQuery(), true)
-		.then(result => {
-			console.log(result);
-		});
-	webContents.executeJavaScript(rollbackModule());
-
-	// webContents.executeJavaScript(registerMessage());
+	return Promise.resolve()
+		.then(() => webContents.executeJavaScript(replaceModule()))
+		.then(() => webContents.executeJavaScript(loadJQuery(), true))
+		.then(result => console.log(result))
+		.then(() => webContents.executeJavaScript(rollbackModule()))
+		.then(() => webContents.executeJavaScript(registerMessage()))
+		.then(() => webContents.executeJavaScript(loginCode()));
 }
 
 function loginCode() {
 	return `
 		$('#TANGRAM__PSP_3__userName').val('zhangaz_temp');
 		$('#TANGRAM__PSP_3__password').val('abc123456');
-
-		function receiveMessage(event)
-		{
-		  alert('child got: ', event.data);
-		}
-		window.addEventListener("message", receiveMessage, false);
 
 		$('#TANGRAM__PSP_3__verifyCode').val('abc');
 		// $('#TANGRAM__PSP_3__submit').click();
@@ -86,7 +79,7 @@ function registerMessage() {
 		const ipcRenderer = require('electron').ipcRenderer;
 
 		ipcRenderer.on('message', (event, data) => {
-			console.log('yyyyyyyyyyy', event, data);
+			alert(data, 'yyyyyyyyyyy');
 		});
 
 		ipcRenderer.send('message', {
@@ -94,7 +87,7 @@ function registerMessage() {
 		});
 	`;
 
-	return addScript(initScriptByCode(`const ipcRenderer = require('electron').ipcRenderer;`));
+	return addScript(initScriptByCode(code));
 }
 
 function addScript(initScript) {
@@ -102,16 +95,20 @@ function addScript(initScript) {
 		var script = document.createElement('script');
 		${initScript}
 		script.onload = function() {
-			document.write('load script: ', '${initScript}');
+			alert(\`${replaceQuotationMarks(initScript)}\`, 'load script: ');
 		};
 		document.body.appendChild(script);
 	`;
 }
 
 function initScriptBySrc(src) {
-	return `script.src = "${src}"`;
+	return `script.src = \`${replaceQuotationMarks(src)}\``;
 }
 
 function initScriptByCode(code) {
-	return `script.innerHTML = "${code}"`;
+	return `script.innerHTML = \`${replaceQuotationMarks(code)}\``;
+}
+
+function replaceQuotationMarks(str) {
+	return str.replace(/(["'`])/g, `\\$1`)
 }
