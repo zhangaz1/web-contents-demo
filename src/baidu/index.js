@@ -1,10 +1,13 @@
 const path = require('path');
 
-let baiduWindow = null;
-let webContents = null;
+const remote = require('electron').remote;
+const BrowserWindow = remote.BrowserWindow;
 
 const preloadJs = path.join(__dirname, '/preload.js');
 const loginUrl = 'https://passport.baidu.com/v2/?login';
+
+let baiduWindow = null;
+let webContents = null;
 
 export const init = () => {
 	$('#open').click(openHandler);
@@ -16,15 +19,20 @@ function openHandler() {
 	baiduWindow = createWindow();
 	webContents = baiduWindow.webContents;
 
+	webContents.on('did-finish-load', () => {
+		// baiduWindow.send('message', {
+		// 	data: 'xyz'
+		// });
+
+
+	})
+
 	webContents.openDevTools();
 	webContents.loadURL(loginUrl);
 }
 
 function createWindow() {
-	const remote = require('electron').remote;
-	const BrowserWindow = remote.BrowserWindow;
 	return new BrowserWindow({
-		parent: this,
 		width: 800,
 		height: 600,
 		webPreferences: {

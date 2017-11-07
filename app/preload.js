@@ -24,9 +24,9 @@
 			log('got message', data);
 		});
 
-		ipcRenderer.send('message', {
-			data: 123
-		});
+		// ipcRenderer.send('message', {
+		// 	data: 123
+		// });
 	}
 
 	function loadJQuery() {
