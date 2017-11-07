@@ -22,25 +22,12 @@ export const init = () => {
 function openHandler() {
 	baiduWindow = createWindow();
 	webContents = baiduWindow.webContents;
-
-	webContents.on('devtools-opened', () => {
-		// webContents.executeJavaScript(backLog());
-	});
-
-	webContents.on('did-finish-load', login);
-
 	webContents.openDevTools();
 
+	webContents.on('did-finish-load', login);
 	webContents.loadURL(loginUrl);
 
 	// baiduWindow = open(loginUrl);
-}
-
-function backLog() {
-	return `
-		console.Log = console.log;
-		console.Log(console.Log);
-	`;
 }
 
 function createWindow() {
