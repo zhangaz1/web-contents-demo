@@ -1,7 +1,9 @@
 ;
 (function(win) {
-	var jqueryUrl = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
-	var log = console.log;
+	// var jqueryUrl = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
+	var jqueryUrl = 'http://localhost:8080/app/bower_components/jquery/dist/jquery.js';
+
+	var log = win.log = console.log;
 
 	Promise.resolve()
 		.then(backLog)
