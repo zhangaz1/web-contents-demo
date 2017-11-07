@@ -20,10 +20,10 @@ function openHandler() {
 	baiduWindow = createWindow();
 	webContents = baiduWindow.webContents;
 
-	webContents.on('did-finish-load', login);
-
-	webContents.loadURL(loginUrl);
 	webContents.openDevTools();
+
+	webContents.on('did-finish-load', login);
+	webContents.loadURL(loginUrl);
 
 	// baiduWindow = open(loginUrl);
 }
@@ -79,7 +79,7 @@ function registerMessage() {
 		const ipcRenderer = require('electron').ipcRenderer;
 
 		ipcRenderer.on('message', (event, data) => {
-			alert(data, 'yyyyyyyyyyy');
+			console.log(JSON.stringify(data), 'yyyyyyyyyyy');
 		});
 
 		ipcRenderer.send('message', {
@@ -95,7 +95,7 @@ function addScript(initScript) {
 		var script = document.createElement('script');
 		${initScript}
 		script.onload = function() {
-			alert(\`${replaceQuotationMarks(initScript)}\`, 'load script: ');
+			console.log(\`${replaceQuotationMarks(initScript)}\`, 'load script: ');
 		};
 		document.body.appendChild(script);
 	`;
