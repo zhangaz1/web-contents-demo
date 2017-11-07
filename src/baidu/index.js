@@ -3,6 +3,8 @@ const path = require('path');
 let baiduWindow = null;
 let webContents = null;
 
+const preloadJs = 'D:/Workspace/MyGit/MyProjects/web-contents-demo/app/preload.js';
+
 const loginUrl = 'https://passport.baidu.com/v2/?login';
 // const loginUrl = 'https://passport.cnblogs.com/user/signin';
 
@@ -22,7 +24,7 @@ function openHandler() {
 	webContents = baiduWindow.webContents;
 
 	webContents.on('devtools-opened', () => {
-		webContents.executeJavaScript(backLog());
+		// webContents.executeJavaScript(backLog());
 	});
 
 	webContents.on('did-finish-load', login);
@@ -47,6 +49,9 @@ function createWindow() {
 	return new BrowserWindow({
 		width: 800,
 		height: 600,
+		webPreferences: {
+			preload: preloadJs
+		}
 	});
 };
 
