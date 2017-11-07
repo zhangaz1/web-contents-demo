@@ -1,7 +1,6 @@
 ;
 (function(win) {
 	var jqueryUrl = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
-	var $, jQuery;
 	var log = console.log;
 
 	Promise.resolve()
@@ -45,14 +44,8 @@
 		return promise;
 
 		function checkJQuery() {
-			log('checkJQuery');
-			if(win.$) {
-				$ = jQuery = win.$;
-				log('load jquery ready');
-				resolvePromise();
-			} else {
-				setTimeout(checkJQuery, 10);
-			}
+			log('load jquery ready');
+			resolvePromise();
 		}
 	}
 
