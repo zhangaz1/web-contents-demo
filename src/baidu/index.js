@@ -24,7 +24,7 @@ function openHandler() {
 	webContents = baiduWindow.webContents;
 	webContents.openDevTools();
 
-	webContents.on('did-finish-load', login);
+	// webContents.on('did-finish-load', login);
 	webContents.loadURL(loginUrl);
 
 	// baiduWindow = open(loginUrl);
@@ -37,7 +37,8 @@ function createWindow() {
 		width: 800,
 		height: 600,
 		webPreferences: {
-			preload: preloadJs
+			preload: preloadJs,
+			nodeIntegration: false
 		}
 	});
 };
