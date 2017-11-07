@@ -4,6 +4,7 @@ let baiduWindow = null;
 let webContents = null;
 
 const loginUrl = 'https://passport.baidu.com/v2/?login';
+// const loginUrl = 'https://passport.cnblogs.com/user/signin';
 
 // const preJs = 'bower_components/jquery/dist/jquery.js';
 // const jqueryPath = ['file://', __dirname, preJs].join('/');
@@ -20,12 +21,24 @@ function openHandler() {
 	baiduWindow = createWindow();
 	webContents = baiduWindow.webContents;
 
-	webContents.openDevTools();
+	webContents.on('devtools-opened', () => {
+		webContents.executeJavaScript(backLog());
+	});
 
 	webContents.on('did-finish-load', login);
+
+	webContents.openDevTools();
+
 	webContents.loadURL(loginUrl);
 
 	// baiduWindow = open(loginUrl);
+}
+
+function backLog() {
+	return `
+		console.Log = console.log;
+		console.Log(console.Log);
+	`;
 }
 
 function createWindow() {
@@ -71,7 +84,7 @@ function rollbackModule() {
 }
 
 function loadJQuery() {
-	return addScript(initScriptBySrc(jqueryPath));
+	return loadScript(jqueryPath);
 }
 
 function registerMessage() {
@@ -79,7 +92,7 @@ function registerMessage() {
 		const ipcRenderer = require('electron').ipcRenderer;
 
 		ipcRenderer.on('message', (event, data) => {
-			console.log(JSON.stringify(data), 'yyyyyyyyyyy');
+			console.Log('got message', data);
 		});
 
 		ipcRenderer.send('message', {
@@ -87,17 +100,32 @@ function registerMessage() {
 		});
 	`;
 
-	return addScript(initScriptByCode(code));
+	return addScript(code);
 }
 
-function addScript(initScript) {
+function loadScript(src) {
 	return `
+		var resolvePromise;
+		var result = new Promise(function(resolve, reject){
+			resolvePromise = resolve;
+		});
 		var script = document.createElement('script');
-		${initScript}
+		${initScriptBySrc(src)}
 		script.onload = function() {
-			console.log(\`${replaceQuotationMarks(initScript)}\`, 'load script: ');
+			console.Log('load script: ', \`${replaceQuotationMarks(src)}\`);
+			resolvePromise('jquery ready');
 		};
 		document.body.appendChild(script);
+		result;
+	`;
+}
+
+function addScript(code) {
+	return `
+		var script = document.createElement('script');
+		${initScriptByCode(code)}
+		document.body.appendChild(script);
+		console.Log('load script: ', \`${replaceQuotationMarks(code)}\`);
 	`;
 }
 
