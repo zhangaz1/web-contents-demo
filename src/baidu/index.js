@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path'); // ???
 
 const remote = require('electron').remote;
 const BrowserWindow = remote.BrowserWindow;
@@ -8,7 +8,7 @@ const {
 	createMaster
 } = remote.require('./node/framework/message/client/index.js');
 
-const preloadJs = path.join(__dirname, '/preload.js');
+const preloadJs = path.join(__dirname, './../src/baidu/preload.js');
 const loginUrl = 'https://passport.baidu.com/v2/?login';
 
 let baiduWindow = null;
