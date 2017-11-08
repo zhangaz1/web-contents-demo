@@ -3,7 +3,9 @@ import {
 	getMessageChannel
 } from './../server/index.js';
 
-import remote from 'electron';
+import {
+	remote
+} from 'electron';
 
 // export const start = () => {
 // 	const ipcRenderer = require('electron').ipcRenderer;
