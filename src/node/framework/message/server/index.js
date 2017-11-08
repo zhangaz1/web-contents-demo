@@ -3,7 +3,13 @@ const ipcMain = require('electron').ipcMain;
 let messageServerStarted = false;
 const messageChannel = 'message';
 
-export const start = () => {
+module.exports = {
+	start,
+	isMessageServerStarted,
+	getMessageChannel,
+};
+
+function start() {
 	if(process.type !== 'browser') {
 		console.error('should start messager server in main');
 		return;
@@ -16,9 +22,14 @@ export const start = () => {
 		});
 	})
 
-	global.messageServerStarted = messageServerStarted = true;
-	console.log('messageServer started', messageServerStarted, global.messageServerStarted);
+	messageServerStarted = true;
+	console.log('messageServer started');
 }
 
-export const isMessageServerStarted = () => messageServerStarted;
-export const getMessageChannel = () => messageChannel;
+function isMessageServerStarted() {
+	messageServerStarted;
+}
+
+function getMessageChannel() {
+	return messageChannel;
+}

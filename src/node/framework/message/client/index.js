@@ -1,9 +1,13 @@
-import {
+const remote = require('electron').remote
+
+const {
 	isMessageServerStarted,
 	getMessageChannel
-} from './../server/index.js';
+} = require('./../server/index.js');
 
-const remote = require('electron').remote
+module.exports = {
+	createMaster,
+};
 
 // export const start = () => {
 // 	const ipcRenderer = require('electron').ipcRenderer;
@@ -18,8 +22,7 @@ const remote = require('electron').remote
 // }
 
 
-export function createMaster(key) {
-	console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', remote.setGlobal('messageServerStarted', true));
+function createMaster(key) {
 	if(!isMessageServerStarted()) {
 		console.error('should start message server at first');
 	}

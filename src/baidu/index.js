@@ -3,9 +3,10 @@ const path = require('path');
 const remote = require('electron').remote;
 const BrowserWindow = remote.BrowserWindow;
 
-import {
+
+const {
 	createMaster
-} from './../framework/message/client/index.js';
+} = remote.require('./node/framework/message/client/index.js');
 
 const preloadJs = path.join(__dirname, '/preload.js');
 const loginUrl = 'https://passport.baidu.com/v2/?login';

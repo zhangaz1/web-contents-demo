@@ -21,11 +21,7 @@ import createWindow from './helpers/window';
 // in config/env_xxx.json file.
 import env from './env';
 
-
-import {
-	start as startMessageServer
-} from './framework/message/server/index.js';
-
+const startMessageServer = require('./node/framework/message/server/index.js').start;
 
 const setApplicationMenu = () => {
 	const menus = [editMenuTemplate];
