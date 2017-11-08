@@ -52,18 +52,13 @@ app.on('ready', () => {
 	const mainWindow = createWindow('main', {
 		width: 1000,
 		height: 600,
-		webPreferences: {
-			nodeIntegration: false
-		}
 	});
 
-	// mainWindow.loadURL(url.format({
-	// 	pathname: path.join(__dirname, 'app.html'),
-	// 	protocol: 'file:',
-	// 	slashes: true,
-	// }));
-
-	mainWindow.loadURL('http://localhost/Dev/app/desktop.html');
+	mainWindow.loadURL(url.format({
+		pathname: path.join(__dirname, 'app.html'),
+		protocol: 'file:',
+		slashes: true,
+	}));
 
 	if(env.name === 'development') {
 		mainWindow.openDevTools();
