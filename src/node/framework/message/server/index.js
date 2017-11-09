@@ -10,7 +10,7 @@ module.exports = {
 };
 
 function start() {
-	if(process.type !== 'browser') {
+	if (process.type !== 'browser') {
 		console.error('should start messager server in main');
 		return;
 	}
@@ -20,14 +20,14 @@ function start() {
 		event.sender.send('message', {
 			data: 456
 		});
-	})
+	});
 
 	messageServerStarted = true;
 	console.log('messageServer started');
 }
 
 function isMessageServerStarted() {
-	messageServerStarted;
+	return messageServerStarted;
 }
 
 function getMessageChannel() {

@@ -1,4 +1,4 @@
-const remote = require('electron').remote
+const remote = require('electron').remote;
 
 const {
 	isMessageServerStarted,
@@ -7,6 +7,7 @@ const {
 
 module.exports = {
 	createMaster,
+	createClient
 };
 
 // export const start = () => {
@@ -23,8 +24,22 @@ module.exports = {
 
 
 function createMaster(key) {
-	if(!isMessageServerStarted()) {
-		console.error('should start message server at first');
-	}
+	checkServer();
 	console.log('create messager master:', key);
+	return {
+		destroy: function () {
+			console.log('destroy master:', key);
+		}
+	};
+}
+
+function createClient(key) {
+	checkServer();
+	console.log('create messager client:', key);
+}
+
+function checkServer() {
+	if (!isMessageServerStarted()) {
+		throw new Error('should start message server at first');
+	}
 }

@@ -1,8 +1,6 @@
-const path = require('path'); // ???
-
 const remote = require('electron').remote;
+const path = remote.require('path');
 const BrowserWindow = remote.BrowserWindow;
-
 
 const {
 	createMaster
@@ -26,15 +24,21 @@ function openHandler() {
 	baiduWindow = createWindow();
 	webContents = baiduWindow.webContents;
 
-	webContents.on('did-finish-load', () => {
-		// baiduWindow.send('message', {
-		// 	data: 'xyz'
-		// });
-
-	})
+	webContents.on('did-finish-load', loadHandler);
+	webContents.on('close', closeHandler);
 
 	webContents.openDevTools();
 	webContents.loadURL(loginUrl);
+}
+
+function loadHandler() {
+	// baiduWindow.send('message', {
+	// 	data: 'xyz'
+	// });
+}
+
+function closeHandler() {
+	messageMaster.destroy();
 }
 
 function createWindow() {
