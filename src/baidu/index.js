@@ -3,6 +3,9 @@ const {
 	remote
 } = require('electron');
 
+const log = true ?
+	console.log.bind(console) :
+	() => {};
 
 const path = remote.require('path');
 const BrowserWindow = remote.BrowserWindow;
@@ -79,7 +82,7 @@ function close(webContents) {
 }
 
 function requestHandler(events, request) {
-	console.log('request:', arguments);
+	log('request:', arguments);
 	const action = request.action;
 	const handler = requestHandlers[action];
 
@@ -99,7 +102,7 @@ function mapHandlers() {
 
 function validate(request) {
 	const validateImg = request.data;
-	console.log('validate:', validateImg);
+	log('validate:', validateImg);
 
 	const validateEl = $(`
 		<p>
