@@ -69,7 +69,9 @@ Thumbs.db
 /app/background.js
 /app/env.json
 /app/**/*.map
+/app/node/**/*.js
 
 /dist
 
 /coverage
+

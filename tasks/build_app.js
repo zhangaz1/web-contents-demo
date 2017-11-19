@@ -18,6 +18,11 @@ gulp.task('bundle', () => {
 	]);
 });
 
+gulp.task('node', () => {
+	gulp.src('./src/node/**/*.js')
+		.pipe(gulp.dest('./app/node'));
+});
+
 gulp.task('less', () => {
 	return gulp.src(srcDir.path('stylesheets/main.less'))
 		.pipe(plumber())
@@ -36,9 +41,12 @@ gulp.task('watch', () => {
 	watch('src/**/*.js', batch((events, done) => {
 		gulp.start('bundle', utils.beepOnError(done));
 	}));
+	watch('src/node/**/*.js', batch((events, done) => {
+		gulp.start('node', utils.beepOnError(done));
+	}));
 	watch('src/**/*.less', batch((events, done) => {
 		gulp.start('less', utils.beepOnError(done));
 	}));
 });
 
-gulp.task('build', ['bundle', 'less', 'environment']);
+gulp.task('build', ['bundle', 'node', 'less', 'environment']);
