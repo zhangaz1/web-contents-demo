@@ -1,4 +1,13 @@
-const remote = require('electron').remote;
+const {
+	ipcRenderer,
+	remote
+} = require('electron');
+
+ipcRenderer.on('validateResult', function (events, data) {
+	console.log('validate result:', arguments);
+	events.sender.send('validateResult', 'yyyyyyyyyy')
+});
+
 const path = remote.require('path');
 const BrowserWindow = remote.BrowserWindow;
 
@@ -13,6 +22,7 @@ let room = createNewRoom();
 let baiduWindow = null;
 let webContents = null;
 
+
 export const init = () => {
 	$('#open').click(openHandler);
 	$('#close').click(closeRoom);
@@ -26,6 +36,11 @@ function openHandler() {
 
 	webContents.on('did-finish-load', loadHandler);
 	webContents.on('close', subPageClose);
+
+	const win = require('electron').remote.getCurrentWindow();
+	const contents = win.webContents;
+
+	webContents.parentX = contents;
 
 	webContents.openDevTools();
 	webContents.loadURL(loginUrl);
@@ -71,6 +86,8 @@ function createNewRoom() {
 }
 
 function validate(data) {
+
 	console.log('validate:', data);
+	webContents.send('validate', 'xxxxxxxxxxxxx');
 	return data;
 }

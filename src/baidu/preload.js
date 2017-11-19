@@ -1,7 +1,29 @@
 ;
 (function (win) {
-	const remote = require('electron').remote;
+	const {
+		ipcRenderer,
+		remote
+	} = require('electron');
 	const roomManager = remote.require('master-room');
+
+	const BrowserWindow = remote.BrowserWindow;
+
+	ipcRenderer.on('validate', function (event, data) {
+		console.log('got validate result:', arguments);
+
+		// const win = require('electron').remote.getCurrentWindow();
+		// const contents = win.webContents;
+		// contents.send('validateResult', 'good');
+
+		ipcRenderer.send('validateResult', 'good');
+
+		BrowserWindow.fromId(1).webContents.send('validateResult', 'good');
+	});
+
+	ipcRenderer.on('validateResult', function (events, data) {
+		console.log('validate result:', arguments);
+	});
+
 
 	let room = null;
 
@@ -50,16 +72,18 @@
 		$('#TANGRAM__PSP_3__password').val('abc123456');
 
 		room.callMaster({
-				action: 'validate',
-				data: 'abc',
-			})
-			.then(data => {
-				$('#TANGRAM__PSP_3__verifyCode').val('abc');
-				$('#TANGRAM__PSP_3__submit').click();
-			})
-			.catch(() => {
-				alert('validate failed');
-			});
+			action: 'validate',
+			data: 'abc',
+		})
+		// .then(data => {
+		// 	$('#TANGRAM__PSP_3__verifyCode').val('abc');
+		// 	$('#TANGRAM__PSP_3__submit').click();
+		// })
+		// .catch(() => {
+		// 	alert('validate failed');
+		// });
+
+
 	}
 
 	function joinRoom() {
