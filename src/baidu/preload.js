@@ -1,48 +1,35 @@
 ;
 (function (win) {
+	const log = win.log = console.log;
+
 	const {
 		ipcRenderer,
 		remote
 	} = require('electron');
-	const roomManager = remote.require('master-room');
 
 	const BrowserWindow = remote.BrowserWindow;
-
-	ipcRenderer.on('validate', function (event, data) {
-		console.log('got validate result:', arguments);
-
-		// const win = require('electron').remote.getCurrentWindow();
-		// const contents = win.webContents;
-		// contents.send('validateResult', 'good');
-
-		ipcRenderer.send('validateResult', 'good');
-
-		BrowserWindow.fromId(1).webContents.send('validateResult', 'good');
-	});
-
-	ipcRenderer.on('validateResult', function (events, data) {
-		console.log('validate result:', arguments);
-	});
-
-
-	let room = null;
-
-	joinRoom();
 
 	const jqueryUrl = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
 	// const jqueryUrl = 'http://localhost:8080/app/bower_components/jquery/dist/jquery.js';
 
-	const log = win.log = console.log;
+	let parent = null;
+	let currentId = null;
 
-	Promise.resolve()
-		.then(backLog)
-		.then(loadJQuery)
-		.then(login);
+	const responseHandlers = mapHandlers();
+
+	const initPromise = init();
 
 	return void(0);
 
+	function init() {
+		ipcRenderer.on('response', responseHandler);
+
+		return Promise.resolve()
+			.then(loadJQuery);
+	}
+
 	function backLog() {
-		console.Log = log;
+		Log = log;
 	}
 
 	function loadJQuery() {
@@ -71,28 +58,57 @@
 		$('#TANGRAM__PSP_3__userName').val('zhangaz_temp');
 		$('#TANGRAM__PSP_3__password').val('abc123456');
 
-		room.callMaster({
+		request({
 			action: 'validate',
 			data: 'abc',
-		})
-		// .then(data => {
-		// 	$('#TANGRAM__PSP_3__verifyCode').val('abc');
-		// 	$('#TANGRAM__PSP_3__submit').click();
-		// })
-		// .catch(() => {
-		// 	alert('validate failed');
-		// });
-
-
-	}
-
-	function joinRoom() {
-		room = roomManager.getRoom('baidu');
-		room.join({
-			onClose: () => {
-				window.close();
-				room = null;
-			}
 		});
 	}
+
+	function request(option) {
+		option.contentsId = currentId;
+		parent.send('request', option);
+	}
+
+	function responseHandler(event, response) {
+		log('response:', arguments);
+		const action = response.action;
+		const handler = responseHandlers[action];
+
+		if (!handler) {
+			console.error(`there no handler for: ${action}`);
+			return;
+		}
+
+		handler(response.result);
+	}
+
+	function mapHandlers() {
+		return {
+			invite,
+			close,
+			validate,
+		};
+	}
+
+	function invite(invite) {
+		log('invite:', arguments);
+		parent = BrowserWindow.fromId(invite.parentId).webContents;
+		currentId = remote.getCurrentWebContents().id;
+
+		initPromise
+			.then(backLog)
+			.then(login);
+	}
+
+	function close(data) {
+		log('close:', arguments);
+		window.close();
+		parent = null;
+	}
+
+	function validate(data) {
+		$('#TANGRAM__PSP_3__verifyCode').val('abc');
+		$('#TANGRAM__PSP_3__submit').click();
+	}
+
 })(window);

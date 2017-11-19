@@ -3,61 +3,51 @@ const {
 	remote
 } = require('electron');
 
-ipcRenderer.on('validateResult', function (events, data) {
-	console.log('validate result:', arguments);
-	events.sender.send('validateResult', 'yyyyyyyyyy')
-});
 
 const path = remote.require('path');
 const BrowserWindow = remote.BrowserWindow;
 
-const roomManager = remote.require('master-room');
-
 const preloadJs = path.join(__dirname, './../src/baidu/preload.js');
 const loginUrl = 'https://passport.baidu.com/v2/?login';
 
-const roomName = 'baidu';
-let room = createNewRoom();
+const currentId = remote.getCurrentWebContents().id;
 
-let baiduWindow = null;
-let webContents = null;
+const subPages = new Map();
 
+const requestHandlers = mapHandlers();
 
 export const init = () => {
+	ipcRenderer.on('request', requestHandler);
+
 	$('#open').click(openHandler);
-	$('#close').click(closeRoom);
+	$('#close').click(closeAllSubPage);
 };
 
 // return void(0);
 
 function openHandler() {
-	baiduWindow = createWindow();
-	webContents = baiduWindow.webContents;
+	const baiduWindow = createWindow();
+	const webContents = baiduWindow.webContents;
+
+	subPages.set(webContents.id, webContents);
 
 	webContents.on('did-finish-load', loadHandler);
 	webContents.on('close', subPageClose);
-
-	const win = require('electron').remote.getCurrentWindow();
-	const contents = win.webContents;
-
-	webContents.parentX = contents;
 
 	webContents.openDevTools();
 	webContents.loadURL(loginUrl);
 }
 
-function loadHandler() {
-	// baiduWindow.send('message', {
-	// 	data: 'xyz'
-	// });
+function loadHandler(event) {
+	invite(event.sender.webContents);
+}
+
+function closeAllSubPage() {
+
 }
 
 function subPageClose() {
 
-}
-
-function closeRoom() {
-	room = createNewRoom()
 }
 
 function createWindow() {
@@ -72,22 +62,42 @@ function createWindow() {
 	});
 };
 
-function createNewRoom() {
-	const oldRoom = roomManager.getRoom(roomName);
-	if (oldRoom) {
-		oldRoom.close()
+function invite(webContents) {
+	response({
+		contentsId: webContents.id,
+		action: 'invite',
+		result: {
+			parentId: currentId,
+		},
+	});
+}
+
+function mapHandlers() {
+	return {
+		validate,
+	};
+}
+
+function requestHandler(events, request) {
+	console.log('request:', arguments);
+	const action = request.action;
+	const handler = requestHandlers[action];
+
+	if (!handler) {
+		console.error(`there no handler for: ${action}`);
+		return;
 	}
 
-	const newRoom = roomManager.createRoom(roomName, {
-		validate,
-	});
-
-	return newRoom;
+	request.result = handler(request.data);
+	response(request);
 }
 
 function validate(data) {
-
 	console.log('validate:', data);
-	webContents.send('validate', 'xxxxxxxxxxxxx');
 	return data;
+}
+
+function response(option) {
+	const contents = subPages.get(option.contentsId);
+	contents.send('response', option);
 }
