@@ -60,7 +60,7 @@
 
 		request({
 			action: 'validate',
-			data: 'abc',
+			data: $('#TANGRAM__PSP_3__verifyCodeImg').attr('src'),
 		});
 	}
 
@@ -107,7 +107,8 @@
 	}
 
 	function validate(data) {
-		$('#TANGRAM__PSP_3__verifyCode').val('abc');
+		log('validate:', arguments);
+		$('#TANGRAM__PSP_3__verifyCode').val(data);
 		$('#TANGRAM__PSP_3__submit').click();
 	}
 

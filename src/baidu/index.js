@@ -32,7 +32,8 @@ function openHandler() {
 	subPages.set(webContents.id, webContents);
 
 	webContents.on('did-finish-load', loadHandler);
-	webContents.on('close', () => subPages.delete(webContents.id));
+	const contentsId = webContents.id;
+	webContents.on('close', () => subPages.delete(contentsId));
 
 	webContents.openDevTools();
 	webContents.loadURL(loginUrl);
@@ -87,8 +88,7 @@ function requestHandler(events, request) {
 		return;
 	}
 
-	request.result = handler(request.data);
-	response(request);
+	handler(request);
 }
 
 function mapHandlers() {
@@ -97,9 +97,25 @@ function mapHandlers() {
 	};
 }
 
-function validate(data) {
-	console.log('validate:', data);
-	return data;
+function validate(request) {
+	const validateImg = request.data;
+	console.log('validate:', validateImg);
+
+	const validateEl = $(`
+		<p>
+			<img src="${validateImg}">
+			<input type="text">
+			<button>验证</button>
+		</p>
+	`);
+
+	$('button', validateEl).click(() => {
+		request.result = $('input', validateEl).val();
+		response(request);
+		validateEl.remove();
+	});
+
+	$('#validates').append(validateEl);
 }
 
 function response(option) {
