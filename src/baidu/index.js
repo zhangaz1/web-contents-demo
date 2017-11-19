@@ -71,5 +71,6 @@ function createNewRoom() {
 }
 
 function validate(data) {
+	console.log('validate:', data);
 	return data;
 }

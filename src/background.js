@@ -21,11 +21,9 @@ import createWindow from './helpers/window';
 // in config/env_xxx.json file.
 import env from './env';
 
-const startMessageServer = require('./node/framework/message/server/index.js').start;
-
 const setApplicationMenu = () => {
 	const menus = [editMenuTemplate];
-	if(env.name !== 'production') {
+	if (env.name !== 'production') {
 		menus.push(devMenuTemplate);
 	}
 	Menu.setApplicationMenu(Menu.buildFromTemplate(menus));
@@ -34,15 +32,13 @@ const setApplicationMenu = () => {
 // Save userData in separate folders for each environment.
 // Thanks to this you can use production and development versions of the app
 // on same machine like those are two separate apps.
-if(env.name !== 'production') {
+if (env.name !== 'production') {
 	const userDataPath = app.getPath('userData');
 	app.setPath('userData', `${userDataPath} (${env.name})`);
 	require('electron-reload')(__dirname);
 }
 
 app.on('ready', () => {
-	startMessageServer();
-
 	setApplicationMenu();
 
 	const mainWindow = createWindow('main', {
@@ -56,7 +52,7 @@ app.on('ready', () => {
 		slashes: true,
 	}));
 
-	if(env.name === 'development') {
+	if (env.name === 'development') {
 		mainWindow.openDevTools();
 	}
 });
