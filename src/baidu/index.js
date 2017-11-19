@@ -32,7 +32,7 @@ function openHandler() {
 	subPages.set(webContents.id, webContents);
 
 	webContents.on('did-finish-load', loadHandler);
-	webContents.on('close', subPageClose);
+	webContents.on('close', () => subPages.delete(webContents.id));
 
 	webContents.openDevTools();
 	webContents.loadURL(loginUrl);
@@ -43,11 +43,9 @@ function loadHandler(event) {
 }
 
 function closeAllSubPage() {
-
-}
-
-function subPageClose() {
-
+	for (let contents of subPages.values()) {
+		close(contents);
+	}
 }
 
 function createWindow() {
@@ -72,10 +70,11 @@ function invite(webContents) {
 	});
 }
 
-function mapHandlers() {
-	return {
-		validate,
-	};
+function close(webContents) {
+	response({
+		contentsId: webContents.id,
+		action: 'close',
+	});
 }
 
 function requestHandler(events, request) {
@@ -90,6 +89,12 @@ function requestHandler(events, request) {
 
 	request.result = handler(request.data);
 	response(request);
+}
+
+function mapHandlers() {
+	return {
+		validate,
+	};
 }
 
 function validate(data) {
