@@ -1,7 +1,18 @@
 ;
-(function(win) {
-	// const jqueryUrl = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
-	const jqueryUrl = 'http://localhost:8080/app/bower_components/jquery/dist/jquery.js';
+(function (win) {
+	const remote = require('electron').remote;
+	const roomManager = remote.require('master-room');
+
+	let room = roomManager.getRoom('baidu');
+	room.join({
+		onClose: () => {
+			window.close();
+			room = null;
+		}
+	});
+
+	const jqueryUrl = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
+	// const jqueryUrl = 'http://localhost:8080/app/bower_components/jquery/dist/jquery.js';
 
 	const log = win.log = console.log;
 
@@ -31,7 +42,7 @@
 
 	function loadJQuery() {
 		let resolvePromise;
-		const promise = new Promise(function(resolve, reject) {
+		const promise = new Promise(function (resolve, reject) {
 			resolvePromise = resolve;
 		});
 
