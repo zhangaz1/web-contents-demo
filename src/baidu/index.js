@@ -40,11 +40,13 @@ function openHandler() {
 
 	webContents.openDevTools();
 
-	webContents.session.setProxy({
-		proxyRules: 'https=159.192.240.146:55555',
-	}, () => {
-		webContents.loadURL(loginUrl);
-	});
+	// webContents.session.setProxy({
+	// 	proxyRules: 'https=159.192.240.146:55555',
+	// }, () => {
+	// 	webContents.loadURL(loginUrl);
+	// });
+
+	webContents.loadURL(loginUrl);
 }
 
 function loadHandler(event) {
