@@ -9,8 +9,8 @@
 
 	const BrowserWindow = remote.BrowserWindow;
 
-	const jqueryUrl = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
-	// const jqueryUrl = 'http://localhost:8080/app/bower_components/jquery/dist/jquery.js';
+	// const jqueryUrl = 'https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js';
+	const jqueryUrl = 'http://localhost:8080/app/bower_components/jquery/dist/jquery.js';
 
 	const loginUrl = 'https://passport.baidu.com/v2/?login';
 
